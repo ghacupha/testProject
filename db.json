@@ -1,0 +1,22 @@
+{
+  "payments": [
+    {
+      "no": 10,
+      "paymentNumber": "DC100",
+      "payee": "David",
+      "paymentAmount": 120300
+    },
+    {
+      "no": 13,
+      "paymentNumber": "DC123",
+      "payee": "Campbell",
+      "paymentAmount": 150
+    },
+    {
+      "id": "10",
+      "paymentNumber": "DC100",
+      "payee": "Edwin",
+      "paymentAmount": "120000"
+    }
+  ]
+}
