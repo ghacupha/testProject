@@ -26,7 +26,8 @@ const _reducer = createReducer(
 
   on(paymentsLoadSuccess, (state, {payments}) => ({
     ...state,
-    payments: [...state.payments, ...payments]
+    // todo do not duplicate
+    payments: [...payments]
   })),
 
   on(paymentsLoadFailure, state => state),
