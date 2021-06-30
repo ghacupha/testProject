@@ -1,12 +1,19 @@
 import {Action, createReducer, on} from "@ngrx/store";
 import {
   createPayment,
-  createPaymentFailure, createPaymentSuccess, loadPayments,
+  createPaymentFailure, createPaymentSuccess, loadPayments, paymentActionTypes,
   paymentsLoadFailure,
   paymentsLoadSuccess
 } from "./payment.actions";
 import {Payment} from "../payments/payment.model";
-import {createDefaultLoadable, Loadable, onLoadableError, onLoadableLoad, onLoadableSuccess} from "loadable-state";
+import {
+  createDefaultLoadable,
+  Loadable,
+  onLoadableError,
+  onLoadableLoad,
+  onLoadableSuccess,
+  withLoadable
+} from "loadable-state";
 
 export const paymentStateSelectorKey = 'payments';
 
@@ -19,36 +26,36 @@ export const initialState: State = {
   payments: []
 }
 
-const _reducer = createReducer(
+const _baseReducer = createReducer(
   initialState,
-
-  // todo modify after effects
-  on(loadPayments, state=> ({
-    ...onLoadableLoad(state)
-  })),
-
   on(paymentsLoadSuccess, (state, {payments}) => ({
-    ...onLoadableSuccess(state),
-    // todo do not duplicate
-    payments: [...payments]
+    ...state,
+    payments: [ ...payments]
   })),
 
-  on(paymentsLoadFailure, (state, {error}) => ({
-    ...onLoadableError(state, error)
-  })),
-
-  // todo modify after effects to do nothing
-  on(createPayment, state => ({...onLoadableLoad(state)})),
-
-  // todo modify after effects to add array
   on(createPaymentSuccess, (state, {payment}) => ({
-    ...onLoadableSuccess(state),
-    payments: [...onLoadableSuccess(state).payments, payment]
-  })),
-
-  on(createPaymentFailure, (state, {error}) => ({...onLoadableError(state, error)}))
+    ...state,
+    payments: [...state.payments, payment]
+  }))
 );
 
+function _loadReducer ( state: State, action: Action): State {
+  return withLoadable(_baseReducer, {
+    loadingActionType: paymentActionTypes.loadPayments,
+    successActionType: paymentActionTypes.loadPaymentsSuccess,
+    errorActionType: paymentActionTypes.loadPaymentsFailure,
+  })(state, action)
+}
+
+// Add payment function
+function _paymentReducer ( state: State, action: Action): State {
+  return withLoadable(_loadReducer, {
+    loadingActionType: paymentActionTypes.createPayment,
+    successActionType: paymentActionTypes.createPaymentSuccess,
+    errorActionType: paymentActionTypes.createPaymentFailure,
+  })(state, action)
+}
+
 export function reducer(state: State, action: Action): State {
-  return _reducer(state, action);
+  return _paymentReducer(state, action);
 }

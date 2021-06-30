@@ -1,32 +1,42 @@
 import {ActionCreator, createAction, props} from "@ngrx/store";
 import {Payment} from "../payments/payment.model";
 
+export enum paymentActionTypes {
+  createPayment= 'payments/create',
+  createPaymentSuccess= 'payments/create success',
+  createPaymentFailure= 'payments/create failure',
+
+  loadPayments= 'payments/load',
+  loadPaymentsSuccess= 'payments/load success',
+  loadPaymentsFailure= 'payments/load failure',
+
+}
 export const createPayment = createAction(
-  'payments/create',
+  paymentActionTypes.createPayment,
   props<{payment: Payment}>()
 );
 
 export const createPaymentSuccess = createAction(
-  'payments/create success',
+  paymentActionTypes.createPaymentSuccess,
   props<{payment: Payment}>()
 );
 
 export const createPaymentFailure = createAction(
-  'payments/create failure',
+  paymentActionTypes.createPaymentFailure,
   props<{error: string}>()
 );
 
 export const loadPayments = createAction(
-  'payments/load'
+  paymentActionTypes.loadPayments
 );
 
 // todo modify after effects
 export const paymentsLoadSuccess = createAction(
-  'payments/load success',
+  paymentActionTypes.loadPaymentsSuccess,
   props<{payments: Payment[]}>()
 );
 
 export const paymentsLoadFailure = createAction(
-  'payments/load failure',
+  paymentActionTypes.loadPaymentsFailure,
   props<{error: string}>()
 );
