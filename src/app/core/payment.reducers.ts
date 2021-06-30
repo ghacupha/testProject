@@ -1,8 +1,7 @@
 import {Action, createReducer, on} from "@ngrx/store";
 import {
-  createPayment,
-  createPaymentFailure, createPaymentSuccess, loadPayments, paymentActionTypes,
-  paymentsLoadFailure,
+  createPaymentSuccess,
+  paymentActionTypes,
   paymentsLoadSuccess
 } from "./payment.actions";
 import {Payment} from "../payments/payment.model";
@@ -25,6 +24,7 @@ export const initialState: State = {
 
 const _baseReducer = createReducer(
   initialState,
+
   on(paymentsLoadSuccess, (state, {payments}) => ({
     ...state,
     payments: [ ...payments]
