@@ -12,3 +12,8 @@ export const selectSelectedPayment = createSelector(
   paymentFeatureSelector,
   (state: State) => state.selectedPayment
 );
+
+export const selectUpdateStatus = createSelector(
+  paymentFeatureSelector,
+  (state: State) => state.isUpdating
+);

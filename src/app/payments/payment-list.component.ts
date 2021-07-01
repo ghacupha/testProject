@@ -5,7 +5,7 @@ import {select, Store} from "@ngrx/store";
 import {State} from "../core/payment.reducers";
 import {paymentSelector} from "../core/payment.selectors";
 import {Router} from "@angular/router";
-import {deletePayment, loadPayments, updatePayment} from "../core/payment.actions";
+import {deletePayment, loadPayments, selectUpdatePayment, updatePayment} from "../core/payment.actions";
 
 @Component({
   selector: 'payment-list-component',
@@ -48,7 +48,7 @@ export class PaymentListComponent implements OnInit {
   }
 
   updatePayment(payment: Payment) {
-    this.store.dispatch(updatePayment({payment}))
+    this.store.dispatch(selectUpdatePayment({payment}))
 
     this.router.navigate(['payment-update'])
   }

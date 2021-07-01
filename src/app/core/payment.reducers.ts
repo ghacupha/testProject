@@ -2,7 +2,7 @@ import {Action, createReducer, on} from "@ngrx/store";
 import {
   createPaymentSuccess, deletePaymentSuccess,
   paymentActionTypes,
-  paymentsLoadSuccess, updatePayment, updatePaymentSuccess
+  paymentsLoadSuccess, selectUpdatePayment, updatePayment, updatePaymentFailure, updatePaymentSuccess
 } from "./payment.actions";
 import {Payment} from "../payments/payment.model";
 import {
@@ -16,12 +16,14 @@ export const paymentStateSelectorKey = 'payments';
 export interface State extends Loadable {
   payments: Payment[];
   selectedPayment: Payment | null,
+  isUpdating: boolean;
 }
 
 export const initialState: State = {
   ...createDefaultLoadable(),
   payments: [],
-  selectedPayment: null
+  selectedPayment: null,
+  isUpdating: false
 }
 
 const _baseReducer = createReducer(
@@ -42,9 +44,16 @@ const _baseReducer = createReducer(
     payments: [...removePayment(state.payments,payment) ]
   })),
 
-  on(updatePayment, (state, {payment}) => ({
+  on(selectUpdatePayment, (state, {payment}) => ({
     ...state,
-    selectedPayment: payment
+    selectedPayment: payment,
+    isUpdating: true
+  })),
+
+  on(updatePayment, (state) => ({
+    ...state,
+    selectedPayment: null,
+    isUpdating: false
   })),
 
   on(updatePaymentSuccess, function (state, {payment}): State {
@@ -52,16 +61,22 @@ const _baseReducer = createReducer(
     return {
       ...onLoadableSuccess(state),
       payments: [...prevPayments, payment],
-      selectedPayment: null
+      selectedPayment: null,
+      isUpdating: false
     }
   }),
+
+  on(updatePaymentFailure, state => ({
+    ...state,
+    isUpdating: false
+  }))
 );
 
 function removePayment(payments: Payment[], payment: Payment): Payment[] {
   let updatedPayments: Payment[] = [];
   payments.forEach((item, index) => {
     if (item.id !== payment.id) {
-      updatedPayments = payments.splice(index, 1)
+      updatedPayments.push(item)
     }
   });
   return updatedPayments;

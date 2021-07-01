@@ -5,7 +5,7 @@ import {Router} from "@angular/router";
 import {State} from "../core/payment.reducers";
 import {select, Store} from "@ngrx/store";
 import {createPayment, updatePayment} from "../core/payment.actions";
-import {selectSelectedPayment} from "../core/payment.selectors";
+import {selectSelectedPayment, selectUpdateStatus} from "../core/payment.selectors";
 import {Observable} from "rxjs";
 
 @Component({
@@ -56,8 +56,11 @@ export class PaymentUpdateComponent implements OnInit {
   ngOnInit(): void {
     this.updatePayment = this.store.pipe(select(selectSelectedPayment));
 
-    if (this.updatePayment !== undefined) {
-      this.isUpdating = true;
+    this.store.pipe(select(selectUpdateStatus)).subscribe(status => {
+      this.isUpdating = status;
+    })
+
+    if (this.isUpdating) {
       this.updatePayment.subscribe(payment => {
         if (payment !== null)
           this.updateForm(payment)

@@ -14,10 +14,27 @@ export enum paymentActionTypes {
   deletePaymentSuccess = 'payments/delete success',
   deletePaymentFailure = 'payments/delete failure',
 
+  selectUpdatePayment = 'payments/update-selection',
+  selectUpdatePaymentSuccess = 'payments/update-selection success',
+  selectUpdatePaymentFailure = 'payments/update-selection failure',
+
   updatePayment = 'payments/update',
   updatePaymentSuccess = 'payments/update success',
   updatePaymentFailure = 'payments/update failure',
 }
+
+export const selectUpdatePayment = createAction(
+  paymentActionTypes.selectUpdatePayment,
+  props<{payment: Payment}>()
+);
+
+export const selectUpdatePaymentSuccess = createAction(
+  paymentActionTypes.selectUpdatePaymentSuccess,
+);
+
+export const selectUpdatePaymentFailure = createAction(
+  paymentActionTypes.selectUpdatePaymentFailure,
+);
 
 export const updatePayment = createAction(
   paymentActionTypes.updatePayment,
