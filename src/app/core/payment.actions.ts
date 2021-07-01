@@ -14,6 +14,10 @@ export enum paymentActionTypes {
   deletePaymentSuccess = 'payments/delete success',
   deletePaymentFailure = 'payments/delete failure',
 
+  deletionComplete = "payments/deleteComplete",
+  onDeletionCompleteSuccess = 'payments/deleteComplete success',
+  onDeletionCompleteFailure = 'payments/deleteComplete failure',
+
   selectUpdatePayment = 'payments/update-selection',
   selectUpdatePaymentSuccess = 'payments/update-selection success',
   selectUpdatePaymentFailure = 'payments/update-selection failure',
@@ -22,6 +26,21 @@ export enum paymentActionTypes {
   updatePaymentSuccess = 'payments/update success',
   updatePaymentFailure = 'payments/update failure',
 }
+
+export const deletionComplete = createAction(
+  paymentActionTypes.deletionComplete,
+  props<{id: number}>()
+);
+
+export const onDeletionCompleteSuccess = createAction(
+  paymentActionTypes.onDeletionCompleteSuccess,
+  props<{payments: Payment[]}>()
+);
+
+export const onDeletionCompleteFailure = createAction(
+  paymentActionTypes.onDeletionCompleteFailure,
+  props<{error: string}>()
+);
 
 export const selectUpdatePayment = createAction(
   paymentActionTypes.selectUpdatePayment,

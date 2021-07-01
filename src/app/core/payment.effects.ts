@@ -3,17 +3,19 @@ import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {PaymentService} from "../payments/payment.service";
 import {
   createPayment, createPaymentFailure,
-  createPaymentSuccess, deletePayment, deletePaymentFailure, deletePaymentSuccess,
-  loadPayments,
+  createPaymentSuccess, deletePayment, deletePaymentFailure, deletePaymentSuccess, deletionComplete,
+  loadPayments, onDeletionCompleteFailure, onDeletionCompleteSuccess,
   paymentsLoadFailure,
   paymentsLoadSuccess, updatePayment, updatePaymentFailure, updatePaymentSuccess
 } from "./payment.actions";
 import {catchError, map, switchMap} from "rxjs/operators";
 import {of} from "rxjs";
+import {PaymentUpdateService} from "../payments/payment-update.service";
 
 @Injectable()
 export class paymentEffects{
 
+  // todo deletion-complete without triggering the http-client
   loadEffect$ = createEffect(
     () => this.actions$.pipe(
       ofType(loadPayments),
@@ -21,6 +23,19 @@ export class paymentEffects{
         () => this.service.getPayments().pipe(
           map(payments => paymentsLoadSuccess({payments})),
           catchError(error => of(paymentsLoadFailure({error})))
+        )
+      )
+    )
+  );
+
+  // todo deletion-complete without triggering the http-client
+  deletionCompleteEffect$ = createEffect(
+    () => this.actions$.pipe(
+      ofType(deletionComplete),
+      switchMap(
+        (action) => this.updateService.getPaymentPostUpdate(action.id).pipe(
+          map(payments => onDeletionCompleteSuccess({payments})),
+          catchError(error => of(onDeletionCompleteFailure({error})))
         )
       )
     )
@@ -62,6 +77,8 @@ export class paymentEffects{
     )
   );
 
-  constructor(private actions$: Actions, private service: PaymentService) {
+  constructor(private actions$: Actions,
+              private service: PaymentService,
+              private updateService: PaymentUpdateService) {
   }
 }

@@ -1,12 +1,6 @@
 {
   "payments": [
     {
-      "id": 10,
-      "paymentNumber": "TT1000",
-      "payee": "William I",
-      "paymentAmount": 120300
-    },
-    {
       "id": "355",
       "paymentNumber": "TT355",
       "payee": "George III",
@@ -19,22 +13,16 @@
       "paymentAmount": "2302"
     },
     {
-      "id": "2342",
-      "paymentNumber": "TT2342",
-      "payee": "JamesIII",
-      "paymentAmount": "2324"
+      "id": "658",
+      "paymentNumber": "DC658",
+      "payee": "Victoria",
+      "paymentAmount": "2500"
     },
     {
-      "id": "92403",
-      "paymentNumber": "TT234",
-      "payee": "Henry I",
-      "paymentAmount": "230230"
-    },
-    {
-      "id": "233",
-      "paymentNumber": "TT233",
-      "payee": "Stuart",
-      "paymentAmount": "1000"
+      "id": "87",
+      "paymentNumber": "DC98",
+      "payee": "Richard II",
+      "paymentAmount": "2382"
     }
   ]
 }

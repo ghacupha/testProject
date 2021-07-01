@@ -1,14 +1,17 @@
 import {Injectable} from "@angular/core";
-import {Observable} from "rxjs";
+import {EMPTY, Observable, of} from "rxjs";
 import {Payment} from "./payment.model";
 import {HttpClient} from "@angular/common/http";
+import {Store} from "@ngrx/store";
+import {State} from "../core/payment.reducers";
+import {deletionComplete} from "../core/payment.actions";
 
 
 @Injectable({providedIn: 'root'})
 export class PaymentService{
   baseUrl = 'http://localhost:3000/payments';
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private store: Store<State>) {
   }
 
   getPayments(): Observable<Payment[]> {
@@ -22,8 +25,14 @@ export class PaymentService{
   }
 
   deletePayment(id: number): Observable<Payment> {
+    let deletedPayment: Observable<Payment> = EMPTY;
 
-    return this.http.delete<Payment>(`${this.baseUrl}/${id}`);
+    this.http.delete<Payment>(`${this.baseUrl}/${id}`).subscribe((deleted) => {
+      this.store.dispatch(deletionComplete({id}))
+      deletedPayment = of(deleted)
+    })
+
+    return deletedPayment;
   }
 
   updatePayment(payment: Payment): Observable<Payment> {
