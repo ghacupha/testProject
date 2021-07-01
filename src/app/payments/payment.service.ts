@@ -28,6 +28,6 @@ export class PaymentService{
 
   updatePayment(payment: Payment): Observable<Payment> {
 
-    return this.http.put<Payment>(this.baseUrl, payment);
+    return this.http.put<Payment>(`${this.baseUrl}/${payment.id}`, payment);
   }
 }

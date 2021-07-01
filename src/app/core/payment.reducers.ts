@@ -57,7 +57,7 @@ const _baseReducer = createReducer(
   })),
 
   on(updatePaymentSuccess, function (state, {payment}): State {
-    const prevPayments = replacePayment(state.payments, payment);
+    const prevPayments = removePayment(state.payments, payment);
     return {
       ...onLoadableSuccess(state),
       payments: [...prevPayments, payment],
@@ -77,16 +77,6 @@ function removePayment(payments: Payment[], payment: Payment): Payment[] {
   payments.forEach((item, index) => {
     if (item.id !== payment.id) {
       updatedPayments.push(item)
-    }
-  });
-  return updatedPayments;
-}
-
-function replacePayment(payments: Payment[], payment: Payment): Payment[] {
-  let updatedPayments: Payment[] = [];
-  payments.forEach((item, index) => {
-    if (item.id !== payment.id) {
-      updatedPayments.push(item);
     }
   });
   return updatedPayments;

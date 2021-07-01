@@ -29,12 +29,14 @@ import {Observable} from "rxjs";
           <label for="paymentAmount">Paid Amount:</label>
           <input formControlName="paymentAmount" id="paymentAmount">
         </div>
-        <button type="submit">New Payment</button>
+        <button type="submit">{{buttonPrompt}}</button>
       </form>
     </div>
   `
 })
 export class PaymentUpdateComponent implements OnInit {
+
+  buttonPrompt?: string = "New Payment..."
 
   isUpdating: boolean = false;
 
@@ -65,6 +67,7 @@ export class PaymentUpdateComponent implements OnInit {
         if (payment !== null)
           this.updateForm(payment)
       });
+      this.buttonPrompt = "Update Payment";
     }
   }
 
