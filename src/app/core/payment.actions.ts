@@ -1,5 +1,6 @@
 import {ActionCreator, createAction, props} from "@ngrx/store";
 import {Payment} from "../payments/payment.model";
+import {PaymentUpdateService} from "../payments/payment-update.service";
 
 export enum paymentActionTypes {
   createPayment= 'payments/create',
@@ -25,7 +26,26 @@ export enum paymentActionTypes {
   updatePayment = 'payments/update',
   updatePaymentSuccess = 'payments/update success',
   updatePaymentFailure = 'payments/update failure',
+
+  paymentUpdateCompleted = 'payments/update-completed',
+  paymentUpdateCompletedSuccessfully = 'payments/update-completed successfully',
+  paymentUpdateCompletionFailed = 'payments/update-completed failure',
 }
+
+export const paymentUpdateCompleted = createAction(
+  paymentActionTypes.paymentUpdateCompleted,
+  props<{payment: Payment}>()
+);
+
+export const paymentUpdateCompletedSuccessfully = createAction(
+  paymentActionTypes.paymentUpdateCompletedSuccessfully,
+  props<{payments: Payment[]}>()
+);
+
+export const paymentUpdateCompletionFailed = createAction(
+  paymentActionTypes.paymentUpdateCompletionFailed,
+  props<{error: string}>()
+);
 
 export const deletionComplete = createAction(
   paymentActionTypes.deletionComplete,

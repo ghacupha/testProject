@@ -1,8 +1,15 @@
 import {Action, createReducer, on} from "@ngrx/store";
 import {
-  createPaymentSuccess, deletePaymentSuccess, onDeletionCompleteSuccess,
+  createPaymentSuccess,
+  deletePaymentSuccess,
+  onDeletionCompleteSuccess,
   paymentActionTypes,
-  paymentsLoadSuccess, selectUpdatePayment, updatePayment, updatePaymentFailure, updatePaymentSuccess
+  paymentsLoadSuccess,
+  paymentUpdateCompletedSuccessfully,
+  selectUpdatePayment,
+  updatePayment,
+  updatePaymentFailure,
+  updatePaymentSuccess
 } from "./payment.actions";
 import {Payment} from "../payments/payment.model";
 import {
@@ -67,6 +74,11 @@ const _baseReducer = createReducer(
   })),
 
   on(onDeletionCompleteSuccess, (state, {payments}) => ({
+    ...state,
+    payments: [...payments]
+  })),
+
+  on(paymentUpdateCompletedSuccessfully, (state, {payments}) => ({
     ...state,
     payments: [...payments]
   }))

@@ -4,7 +4,7 @@ import {Payment} from "./payment.model";
 import {HttpClient} from "@angular/common/http";
 import {Store} from "@ngrx/store";
 import {State} from "../core/payment.reducers";
-import {deletionComplete} from "../core/payment.actions";
+import {deletionComplete, paymentUpdateCompleted} from "../core/payment.actions";
 
 
 @Injectable({providedIn: 'root'})
@@ -36,7 +36,13 @@ export class PaymentService{
   }
 
   updatePayment(payment: Payment): Observable<Payment> {
+    let updatedPayment: Observable<Payment> = EMPTY;
 
-    return this.http.put<Payment>(`${this.baseUrl}/${payment.id}`, payment);
+    this.http.put<Payment>(`${this.baseUrl}/${payment.id}`, payment).subscribe(updated => {
+      this.store.dispatch(paymentUpdateCompleted({payment}))
+      updatedPayment = of(updated);
+    });
+
+    return updatedPayment;
   }
 }

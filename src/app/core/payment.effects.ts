@@ -2,11 +2,23 @@ import {Injectable} from "@angular/core";
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {PaymentService} from "../payments/payment.service";
 import {
-  createPayment, createPaymentFailure,
-  createPaymentSuccess, deletePayment, deletePaymentFailure, deletePaymentSuccess, deletionComplete,
-  loadPayments, onDeletionCompleteFailure, onDeletionCompleteSuccess,
+  createPayment,
+  createPaymentFailure,
+  createPaymentSuccess,
+  deletePayment,
+  deletePaymentFailure,
+  deletePaymentSuccess,
+  deletionComplete,
+  loadPayments,
+  onDeletionCompleteFailure,
+  onDeletionCompleteSuccess,
   paymentsLoadFailure,
-  paymentsLoadSuccess, updatePayment, updatePaymentFailure, updatePaymentSuccess
+  paymentsLoadSuccess,
+  paymentUpdateCompleted,
+  paymentUpdateCompletedSuccessfully, paymentUpdateCompletionFailed,
+  updatePayment,
+  updatePaymentFailure,
+  updatePaymentSuccess
 } from "./payment.actions";
 import {catchError, map, switchMap} from "rxjs/operators";
 import {of} from "rxjs";
@@ -33,13 +45,25 @@ export class paymentEffects{
     () => this.actions$.pipe(
       ofType(deletionComplete),
       switchMap(
-        (action) => this.updateService.getPaymentPostUpdate(action.id).pipe(
+        (action) => this.updateService.getPaymentPostDelete(action.id).pipe(
           map(payments => onDeletionCompleteSuccess({payments})),
           catchError(error => of(onDeletionCompleteFailure({error})))
         )
       )
     )
   );
+
+  paymentUpdateEffect$ = createEffect(
+    () => this.actions$.pipe(
+      ofType(paymentUpdateCompleted),
+      switchMap(
+        (action) => this.updateService.getPaymentPostUpdate(action.payment).pipe(
+          map(payments => paymentUpdateCompletedSuccessfully({payments})),
+          catchError(error => of(paymentUpdateCompletionFailed({error})))
+        )
+      )
+    )
+  )
 
   createEffect$ = createEffect(
     () => this.actions$.pipe(

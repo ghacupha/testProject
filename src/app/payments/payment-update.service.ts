@@ -13,12 +13,20 @@ export class PaymentUpdateService {
   constructor(private store: Store<State>) {
   }
 
-  getPaymentPostUpdate(id: number): Observable<Payment[]> {
+  getPaymentPostDelete(id: number): Observable<Payment[]> {
     let previousList: Payment[] = [];
 
     this.store.pipe(select(paymentSelector)).subscribe(payments => previousList =payments);
 
     return of(this.removePayment(previousList, id));
+  }
+
+  getPaymentPostUpdate(payment: Payment): Observable<Payment[]> {
+    let previousList: Payment[] = [];
+
+    this.store.pipe(select(paymentSelector)).subscribe(payments => previousList =payments);
+
+    return of([...this.removePayment(previousList, payment.id), payment]);
   }
 
   /**
