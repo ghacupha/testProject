@@ -3,10 +3,10 @@ import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {PaymentService} from "../payments/payment.service";
 import {
   createPayment, createPaymentFailure,
-  createPaymentSuccess,
+  createPaymentSuccess, deletePayment, deletePaymentFailure, deletePaymentSuccess,
   loadPayments,
   paymentsLoadFailure,
-  paymentsLoadSuccess
+  paymentsLoadSuccess, updatePayment, updatePaymentFailure, updatePaymentSuccess
 } from "./payment.actions";
 import {catchError, map, switchMap} from "rxjs/operators";
 import {of} from "rxjs";
@@ -33,6 +33,30 @@ export class paymentEffects{
         (action) => this.service.createPayment(action.payment).pipe(
           map(payment => createPaymentSuccess({payment})),
           catchError(error => of(createPaymentFailure({error})))
+        )
+      )
+    )
+  );
+
+  deleteEffect$ = createEffect(
+    () => this.actions$.pipe(
+      ofType(deletePayment),
+      switchMap(
+        action => this.service.deletePayment(action.id).pipe(
+          map(payments => deletePaymentSuccess({payments})),
+          catchError(error => of(deletePaymentFailure({error})))
+        )
+      )
+    )
+  );
+
+  updateEffect$ = createEffect(
+    () => this.actions$.pipe(
+      ofType(updatePayment),
+      switchMap(
+        action => this.service.updatePayment(action.payment).pipe(
+          map(payments => updatePaymentSuccess({payments})),
+          catchError(error => of(updatePaymentFailure({error})))
         )
       )
     )

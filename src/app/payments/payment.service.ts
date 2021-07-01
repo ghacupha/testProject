@@ -20,4 +20,18 @@ export class PaymentService{
 
     return this.http.post<Payment>(this.baseUrl, payment)
   }
+
+  deletePayment(id: number): Observable<Payment[]> {
+
+    this.http.delete(`${this.baseUrl}/${id}`);
+
+    return this.getPayments();
+  }
+
+  updatePayment(payment: Payment): Observable<Payment[]> {
+
+    this.http.put<Payment>(this.baseUrl, payment);
+
+    return this.getPayments()
+  }
 }
