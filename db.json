@@ -11,66 +11,6 @@
       "paymentNumber": "DC123",
       "payee": "Campbell",
       "paymentAmount": 150
-    },
-    {
-      "id": "10",
-      "paymentNumber": "DC100",
-      "payee": "Edwin",
-      "paymentAmount": "120000"
-    },
-    {
-      "id": "13",
-      "paymentNumber": "DC89",
-      "payee": "Conor",
-      "paymentAmount": "8900"
-    },
-    {
-      "id": "18",
-      "paymentNumber": "dc45",
-      "payee": "Spectre",
-      "paymentAmount": "36000"
-    },
-    {
-      "id": "49",
-      "paymentNumber": "DC78",
-      "payee": "Posta",
-      "paymentAmount": "32000"
-    },
-    {
-      "id": "56",
-      "paymentNumber": "DC21",
-      "payee": "Harold",
-      "paymentAmount": "43000"
-    },
-    {
-      "id": "76",
-      "paymentNumber": "DC98",
-      "payee": "James",
-      "paymentAmount": "34908"
-    },
-    {
-      "id": "800",
-      "paymentNumber": "DC801",
-      "payee": "Charles I",
-      "paymentAmount": "89000"
-    },
-    {
-      "id": "958952929",
-      "paymentNumber": "DC27382",
-      "payee": "Edward ii",
-      "paymentAmount": "565929"
-    },
-    {
-      "id": "225395824",
-      "paymentNumber": "DC2656",
-      "payee": "Kelvin",
-      "paymentAmount": "23586"
-    },
-    {
-      "id": "8296451498",
-      "paymentNumber": "DC5689",
-      "payee": "Elizabeth ii",
-      "paymentAmount": "2596291"
     }
   ]
 }

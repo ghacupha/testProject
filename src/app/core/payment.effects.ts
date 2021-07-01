@@ -43,7 +43,7 @@ export class paymentEffects{
       ofType(deletePayment),
       switchMap(
         action => this.service.deletePayment(action.id).pipe(
-          map(payments => deletePaymentSuccess({payments})),
+          map(payment => deletePaymentSuccess({payment})),
           catchError(error => of(deletePaymentFailure({error})))
         )
       )
@@ -55,7 +55,7 @@ export class paymentEffects{
       ofType(updatePayment),
       switchMap(
         action => this.service.updatePayment(action.payment).pipe(
-          map(payments => updatePaymentSuccess({payments})),
+          map(payment => updatePaymentSuccess({payment})),
           catchError(error => of(updatePaymentFailure({error})))
         )
       )

@@ -2,12 +2,12 @@ import {Action, createReducer, on} from "@ngrx/store";
 import {
   createPaymentSuccess, deletePaymentSuccess,
   paymentActionTypes,
-  paymentsLoadSuccess, updatePaymentSuccess
+  paymentsLoadSuccess, updatePayment, updatePaymentSuccess
 } from "./payment.actions";
 import {Payment} from "../payments/payment.model";
 import {
   createDefaultLoadable,
-  Loadable,
+  Loadable, onLoadableSuccess,
   withLoadable
 } from "loadable-state";
 
@@ -15,11 +15,13 @@ export const paymentStateSelectorKey = 'payments';
 
 export interface State extends Loadable {
   payments: Payment[];
+  selectedPayment: Payment | null,
 }
 
 export const initialState: State = {
   ...createDefaultLoadable(),
-  payments: []
+  payments: [],
+  selectedPayment: null
 }
 
 const _baseReducer = createReducer(
@@ -27,7 +29,7 @@ const _baseReducer = createReducer(
 
   on(paymentsLoadSuccess, (state, {payments}) => ({
     ...state,
-    payments: [ ...payments]
+    payments: [...payments]
   })),
 
   on(createPaymentSuccess, (state, {payment}) => ({
@@ -35,18 +37,47 @@ const _baseReducer = createReducer(
     payments: [...state.payments, payment]
   })),
 
-  on(deletePaymentSuccess, (state, {payments}) => ({
+  on(deletePaymentSuccess, (state, {payment}) => ({
     ...state,
-    payments: [...payments]
+    payments: [...removePayment(state.payments,payment) ]
   })),
 
-  on(updatePaymentSuccess, (state, {payments}) => ({
+  on(updatePayment, (state, {payment}) => ({
     ...state,
-    payments: [...payments]
+    selectedPayment: payment
   })),
+
+  on(updatePaymentSuccess, function (state, {payment}): State {
+    const prevPayments = replacePayment(state.payments, payment);
+    return {
+      ...onLoadableSuccess(state),
+      payments: [...prevPayments, payment],
+      selectedPayment: null
+    }
+  }),
 );
 
-function _loadReducer ( state: State, action: Action): State {
+function removePayment(payments: Payment[], payment: Payment): Payment[] {
+  let updatedPayments: Payment[] = [];
+  payments.forEach((item, index) => {
+    if (item.id !== payment.id) {
+      updatedPayments = payments.splice(index, 1)
+    }
+  });
+  return updatedPayments;
+}
+
+function replacePayment(payments: Payment[], payment: Payment): Payment[] {
+  let updatedPayments: Payment[] = [];
+  payments.forEach((item, index) => {
+    if (item.id !== payment.id) {
+      updatedPayments.push(item);
+    }
+  });
+  return updatedPayments;
+}
+
+function _loadReducer(state: State, action: Action): State {
   return withLoadable(_baseReducer, {
     loadingActionType: paymentActionTypes.loadPayments,
     successActionType: paymentActionTypes.loadPaymentsSuccess,
@@ -55,7 +86,7 @@ function _loadReducer ( state: State, action: Action): State {
 }
 
 // Add payment function
-function _paymentReducer ( state: State, action: Action): State {
+function _paymentReducer(state: State, action: Action): State {
   return withLoadable(_loadReducer, {
     loadingActionType: paymentActionTypes.createPayment,
     successActionType: paymentActionTypes.createPaymentSuccess,

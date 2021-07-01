@@ -5,7 +5,7 @@ import {select, Store} from "@ngrx/store";
 import {State} from "../core/payment.reducers";
 import {paymentSelector} from "../core/payment.selectors";
 import {Router} from "@angular/router";
-import {loadPayments} from "../core/payment.actions";
+import {deletePayment, loadPayments, updatePayment} from "../core/payment.actions";
 
 @Component({
   selector: 'payment-list-component',
@@ -13,7 +13,13 @@ import {loadPayments} from "../core/payment.actions";
     <h4>Payments</h4>
     <ul>
       <li *ngFor="let payment of payments$ | async">
-        {{payment.paymentNumber}}, {{payment.payee}}. {{payment.paymentAmount}}
+        <span>
+          {{payment.paymentNumber}}, {{payment.payee}}. {{payment.paymentAmount}}
+        </span>
+        <span>
+          <button (click)="delete(payment.id)">Delete</button>
+          <button (click)="updatePayment(payment)">Update</button>
+        </span>
       </li>
     </ul>
     <button (click)="update()">Create Payment...</button>
@@ -32,6 +38,18 @@ export class PaymentListComponent implements OnInit {
   }
 
   update() {
+    this.router.navigate(['payment-update'])
+  }
+
+  delete(id: number) {
+    this.store.dispatch(deletePayment({id}));
+
+    this.store.dispatch(loadPayments());
+  }
+
+  updatePayment(payment: Payment) {
+    this.store.dispatch(updatePayment({payment}))
+
     this.router.navigate(['payment-update'])
   }
 }

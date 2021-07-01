@@ -26,7 +26,7 @@ export const updatePayment = createAction(
 
 export const updatePaymentSuccess = createAction(
   paymentActionTypes.updatePaymentSuccess,
-  props<{payments: Payment[]}>()
+  props<{payment: Payment}>()
 );
 
 export const updatePaymentFailure = createAction(
@@ -41,7 +41,7 @@ export const deletePayment = createAction(
 
 export const deletePaymentSuccess = createAction(
   paymentActionTypes.deletePaymentSuccess,
-  props<{payments: Payment[]}>()
+  props<{payment: Payment}>()
 );
 
 export const deletePaymentFailure = createAction(

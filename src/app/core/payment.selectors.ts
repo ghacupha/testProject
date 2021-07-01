@@ -7,3 +7,8 @@ export const paymentSelector = createSelector(
   paymentFeatureSelector,
   state => state.payments
 );
+
+export const selectSelectedPayment = createSelector(
+  paymentFeatureSelector,
+  (state: State) => state.selectedPayment
+);

@@ -1,10 +1,12 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Payment} from "./payment.model";
 import {Router} from "@angular/router";
 import {State} from "../core/payment.reducers";
-import {Store} from "@ngrx/store";
-import {createPayment} from "../core/payment.actions";
+import {select, Store} from "@ngrx/store";
+import {createPayment, updatePayment} from "../core/payment.actions";
+import {selectSelectedPayment} from "../core/payment.selectors";
+import {Observable} from "rxjs";
 
 @Component({
   template: `
@@ -32,7 +34,11 @@ import {createPayment} from "../core/payment.actions";
     </div>
   `
 })
-export class PaymentUpdateComponent{
+export class PaymentUpdateComponent implements OnInit {
+
+  isUpdating: boolean = false;
+
+  updatePayment: Observable<Payment | null> | undefined;
 
   paymentsForm = this.fb.group({
     id: [],
@@ -47,20 +53,44 @@ export class PaymentUpdateComponent{
     private store: Store<State>) {
   }
 
-  save(){
+  ngOnInit(): void {
+    this.updatePayment = this.store.pipe(select(selectSelectedPayment));
+
+    if (this.updatePayment !== undefined) {
+      this.isUpdating = true;
+      this.updatePayment.subscribe(payment => {
+        if (payment !== null)
+          this.updateForm(payment)
+      });
+    }
+  }
+
+  save() {
     const payment = this.createFromForm(this.paymentsForm);
 
-    this.store.dispatch(createPayment({payment}));
+    if (this.isUpdating)
+      this.store.dispatch(updatePayment({payment}));
+    else
+      this.store.dispatch(createPayment({payment}));
+
     this.router.navigate(['payment-list'])
   }
 
-  private createFromForm(paymentsForm: FormGroup): Payment {
+  private updateForm(payment: Payment): void {
+    this.paymentsForm.patchValue({
+      id: payment.id,
+      paymentNumber: payment.paymentNumber,
+      payee: payment.payee,
+      paymentAmount: payment.paymentAmount
+    });
+  }
 
-      return {
-        id: paymentsForm.get(['id'])?.value,
-        paymentNumber: paymentsForm.get(['paymentNumber'])?.value,
-        payee: paymentsForm.get(['payee'])?.value,
-        paymentAmount: paymentsForm.get(['paymentAmount'])?.value,
-      }
+  private createFromForm(paymentsForm: FormGroup): Payment {
+    return {
+      id: paymentsForm.get(['id'])?.value,
+      paymentNumber: paymentsForm.get(['paymentNumber'])?.value,
+      payee: paymentsForm.get(['payee'])?.value,
+      paymentAmount: paymentsForm.get(['paymentAmount'])?.value,
+    }
   }
 }
